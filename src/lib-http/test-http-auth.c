@@ -1,4 +1,4 @@
-/* Copyright (c) 2013-2017 Dovecot authors, see the included COPYING file */
+/* Copyright (c) 2013-2016 Dovecot authors, see the included COPYING file */
 
 #include "test-lib.h"
 #include "test-common.h"
@@ -9,7 +9,7 @@
 struct http_auth_challenge_test {
 	const char *scheme;
 	const char *data;
-	struct http_auth_param *params;
+	struct http_auth_param params[];
 };
 
 struct http_auth_challenges_test {
@@ -17,65 +17,69 @@ struct http_auth_challenges_test {
 
 	struct http_auth_challenge_test *challenges;
 };
-
+/* The schemes */
+static const struct http_auth_challenge_test basic[] = {
+	{ .scheme = "Basic",
+	  .data = NULL,
+	  .params = {
+		(struct http_auth_param) { "realm", "WallyWorld" },
+		(struct http_auth_param) { }
+		}
+	},{
+	  .scheme = NULL
+	}
+};
+static const struct http_auth_challenge_test digest[] = {
+	{ .scheme = "Digest",
+	  .data = NULL,
+	  .params = (struct http_auth_param []) { 
+		{ "realm", "testrealm@host.com" },
+		{ "qop", "auth,auth-int" },
+		{ "nonce", "dcd98b7102dd2f0e8b11d0f600bfb0c093" },
+		{ "opaque", "5ccc069c403ebaf9f0171e9517f40e41" },
+		{ }
+	  }
+	},{
+	  .scheme = NULL
+	}
+};
+static const struct http_auth_challenge_test realms[] = {
+	{ .scheme = "Newauth",
+	  .data = NULL,
+	  .params = (struct http_auth_param []) { 
+		{ "realm", "apps" },
+		{ "type", "1" },
+		{ "title", "Login to \"apps\"" },
+		{ }
+	  }
+	},{
+	  .scheme = "Basic",
+	  .data = NULL,
+	  .params = (struct http_auth_param []) { 
+		{ "realm", "simple" },
+		{ }
+	 }
+	},{
+	  .scheme = NULL
+	}
+};
 /* Valid auth challenges tests */
 static const struct http_auth_challenges_test
 valid_auth_challenges_tests[] = {
 	{ 
 		.challenges_in = "Basic realm=\"WallyWorld\"",
-		.challenges = (struct http_auth_challenge_test []) {
-			{ .scheme = "Basic",
-				.data = NULL,
-				.params = (struct http_auth_param []) { 
-					{ "realm", "WallyWorld" }, { NULL, NULL }
-				}
-			},{
-				.scheme = NULL
-			}
-		}
+		.challenges = &basic
 	},{
 		.challenges_in = "Digest "
                  "realm=\"testrealm@host.com\", "
                  "qop=\"auth,auth-int\", "
                  "nonce=\"dcd98b7102dd2f0e8b11d0f600bfb0c093\", "
                  "opaque=\"5ccc069c403ebaf9f0171e9517f40e41\"",
-		.challenges = (struct http_auth_challenge_test []) {
-			{ .scheme = "Digest",
-				.data = NULL,
-				.params = (struct http_auth_param []) { 
-					{ "realm", "testrealm@host.com" },
-					{ "qop", "auth,auth-int" },
-					{ "nonce", "dcd98b7102dd2f0e8b11d0f600bfb0c093" },
-					{ "opaque", "5ccc069c403ebaf9f0171e9517f40e41" },
-					{ NULL, NULL }
-				}
-			},{
-				.scheme = NULL
-			}
-		}
+		.challenges = &digest
 	},{
 		.challenges_in = "Newauth realm=\"apps\", type=1, "
                      "title=\"Login to \\\"apps\\\"\", Basic realm=\"simple\"",
-		.challenges = (struct http_auth_challenge_test []) {
-			{ .scheme = "Newauth",
-				.data = NULL,
-				.params = (struct http_auth_param []) { 
-					{ "realm", "apps" },
-					{ "type", "1" },
-					{ "title", "Login to \"apps\"" },
-					{ NULL, NULL }
-				}
-			},{
-				.scheme = "Basic",
-				.data = NULL,
-				.params = (struct http_auth_param []) { 
-					{ "realm", "simple" },
-					{ NULL, NULL }
-				}
-			},{
-				.scheme = NULL
-			}
-		}
+		.challenges = &realms
 	}
 };
 
@@ -97,7 +101,7 @@ static void test_http_auth_challenges_valid(void)
 
 		test_begin(t_strdup_printf("http auth challenges valid [%d]", i));
 
-		i_zero(&out);
+		memset(&out, 0, sizeof(out));
 		result = (http_auth_parse_challenges
 			((const unsigned char *)challenges_in, strlen(challenges_in), 
 				&out) > 0);
@@ -160,27 +164,18 @@ struct http_auth_credentials_test {
 
 	const char *scheme;
 	const char *data;
-	struct http_auth_param *params;
+	struct http_auth_param params[];
 };
-
-/* Valid auth credentials tests */
 static const struct http_auth_credentials_test
-valid_auth_credentials_tests[] = {
-	{ 
-		.credentials_in = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
+basic_cred[] = {
+	{
 		.scheme = "Basic",
 		.data = "QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
 		.params = NULL
-	},{
-		.credentials_in = "Digest username=\"Mufasa\", "
-                 "realm=\"testrealm@host.com\", "
-                 "nonce=\"dcd98b7102dd2f0e8b11d0f600bfb0c093\", "
-                 "uri=\"/dir/index.html\", "
-                 "qop=auth, "
-                 "nc=00000001, "
-                 "cnonce=\"0a4f113b\", "
-                 "response=\"6629fae49393a05397450978507c4ef1\", "
-                 "opaque=\"5ccc069c403ebaf9f0171e9517f40e41\"",
+	}
+};
+static const struct http_auth_credentials_test mufasa[] = {
+	{
 		.scheme = "Digest",
 		.data = NULL,
 		.params = (struct http_auth_param []) {
@@ -197,6 +192,26 @@ valid_auth_credentials_tests[] = {
 		}
 	}
 };
+
+/* Valid auth credentials tests */
+static const struct http_auth_credentials_test
+valid_auth_credentials_tests[] = {
+	{ 
+		.credentials_in = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
+		.params = &basic_cred
+	},{
+		.credentials_in = "Digest username=\"Mufasa\", "
+                 "realm=\"testrealm@host.com\", "
+                 "nonce=\"dcd98b7102dd2f0e8b11d0f600bfb0c093\", "
+                 "uri=\"/dir/index.html\", "
+                 "qop=auth, "
+                 "nc=00000001, "
+                 "cnonce=\"0a4f113b\", "
+                 "response=\"6629fae49393a05397450978507c4ef1\", "
+                 "opaque=\"5ccc069c403ebaf9f0171e9517f40e41\"",
+                .params = &mufasa
+		}
+	};
 
 static const unsigned int valid_auth_credentials_test_count =
 	N_ELEMENTS(valid_auth_credentials_tests);
@@ -265,7 +280,7 @@ static void test_http_auth_credentials_valid(void)
 
 int main(void)
 {
-	static void (*const test_functions[])(void) = {
+	static void (*test_functions[])(void) = {
 		test_http_auth_challenges_valid,
 		test_http_auth_credentials_valid,
 		NULL
