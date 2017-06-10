@@ -3,9 +3,16 @@
 
 #include "net.h"
 
-#define DOVEADM_CMD_PARAMS_START .parameters = (const struct doveadm_cmd_param[]){
+/*
+ * modify the DOVE_CMD_PARAMS_START macro to declare Compound Literal's
+ * dynamically (unlike GCC which accepts "inline and nested" declarations
+ * Sadly, IBM xlc does not support nested "dynamic" aka nested declaration
+ * of Compound Literal's. Snif!
+ */
+
+#define DOVEADM_CMD_PARAMS_START(_var_)  const struct doveadm_cmd_param _var_[] = {
 #define DOVEADM_CMD_PARAM(optP, nameP, typeP, flagP ) { .short_opt = optP, .name = nameP, .type = typeP, .flags = flagP },
-#define DOVEADM_CMD_PARAMS_END { .short_opt = '\0', .name = NULL, .type = CMD_PARAM_BOOL, .flags = CMD_PARAM_FLAG_NONE } }
+#define DOVEADM_CMD_PARAMS_END { .short_opt = '\0', .name = NULL, .type = CMD_PARAM_BOOL, .flags = CMD_PARAM_FLAG_NONE } } ;
 
 struct doveadm_cmd_ver2;
 struct doveadm_cmd_context;

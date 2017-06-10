@@ -378,13 +378,21 @@ struct doveadm_cmd doveadm_cmd_log[] = {
 	{ cmd_log_find, "log find", "[<dir>]" },
 };
 
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_log_errors_)
+DOVEADM_CMD_PARAM('s', "since", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAMS_END
+
 struct doveadm_cmd_ver2 doveadm_cmd_log_errors_ver2 = {
 	.name = "log errors",
 	.usage = "[-s <min_timestamp>]",
 	.old_cmd = cmd_log_errors,
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('s', "since", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _log_errors_,
 };
 
 void doveadm_register_log_commands(void)

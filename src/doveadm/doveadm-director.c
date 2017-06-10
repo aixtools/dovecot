@@ -910,143 +910,177 @@ static void cmd_director_ring_status(struct doveadm_cmd_context *cctx)
 	director_disconnect(ctx);
 }
 
-struct doveadm_cmd_ver2 doveadm_cmd_director[] = {
-{
-	.name = "director status",
-	.cmd = cmd_director_status,
-	.usage = "[-a <director socket path>] [<user>] [<tag>]",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_director_status_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "user", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "tag", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "director map",
-	.cmd = cmd_director_map,
-	.usage = "[-a <director socket path>] [-f <users file>] [-h | -u] [<host>]",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_director_map_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('f', "users-file", CMD_PARAM_ISTREAM, 0)
 DOVEADM_CMD_PARAM('h', "hash-map", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('u', "user-map", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0', "host", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "director add",
-	.cmd = cmd_director_add,
-	.usage = "[-a <director socket path>] [-t <tag>] <host> [<vhost count>]",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_director_add_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('t', "tag", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "host", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "vhost-count", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "director update",
-	.cmd = cmd_director_update,
-	.usage = "[-a <director socket path>] <host> <vhost count>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_director_update_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "host", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "vhost-count", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "director up",
-	.cmd = cmd_director_up,
-	.usage = "[-a <director socket path>] <host>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_director_up_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "host", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "director down",
-	.cmd = cmd_director_down,
-	.usage = "[-a <director socket path>] <host>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_director_down_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "host", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "director remove",
-	.cmd = cmd_director_remove,
-	.usage = "[-a <director socket path>] <host>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_director_remove_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "host", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "director move",
-	.cmd = cmd_director_move,
-	.usage = "[-a <director socket path>] <user> <host>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_director_move_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "user", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "host", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "director kick",
-	.cmd = cmd_director_kick,
-	.usage = "[-a <director socket path>] [-f <passdb field>] <user>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_director_kick_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "passdb-field", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "user", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "director flush",
-	.cmd = cmd_director_flush,
-	.usage = "[-a <director socket path>] [-F] [--max-parallel <n>] <host>|all",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_director_flush_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('F', "force-flush", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0', "max-parallel", CMD_PARAM_INT64, 0)
 DOVEADM_CMD_PARAM('\0', "host", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_director_dump_)
+DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_director_ring_add_)
+DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAM('\0', "ip", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('\0', "port", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_director_ring_remove_)
+DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAM('\0', "ip", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('\0', "port", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_director_ring_status_)
+DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAMS_END
+
+struct doveadm_cmd_ver2 doveadm_cmd_director[] = {
+{
+	.name = "director status",
+	.cmd = cmd_director_status,
+	.usage = "[-a <director socket path>] [<user>] [<tag>]",
+	.parameters = _director_status_,
+},
+{
+	.name = "director map",
+	.cmd = cmd_director_map,
+	.usage = "[-a <director socket path>] [-f <users file>] [-h | -u] [<host>]",
+	.parameters = _director_map_,
+},
+{
+	.name = "director add",
+	.cmd = cmd_director_add,
+	.usage = "[-a <director socket path>] [-t <tag>] <host> [<vhost count>]",
+	.parameters = _director_add_,
+},
+{
+	.name = "director update",
+	.cmd = cmd_director_update,
+	.usage = "[-a <director socket path>] <host> <vhost count>",
+	.parameters = _director_update_,
+},
+{
+	.name = "director up",
+	.cmd = cmd_director_up,
+	.usage = "[-a <director socket path>] <host>",
+	.parameters = _director_up_,
+},
+{
+	.name = "director down",
+	.cmd = cmd_director_down,
+	.usage = "[-a <director socket path>] <host>",
+	.parameters = _director_down_,
+},
+{
+	.name = "director remove",
+	.cmd = cmd_director_remove,
+	.usage = "[-a <director socket path>] <host>",
+	.parameters = _director_remove_,
+},
+{
+	.name = "director move",
+	.cmd = cmd_director_move,
+	.usage = "[-a <director socket path>] <user> <host>",
+	.parameters = _director_move_,
+},
+{
+	.name = "director kick",
+	.cmd = cmd_director_kick,
+	.usage = "[-a <director socket path>] [-f <passdb field>] <user>",
+	.parameters = _director_kick_,
+},
+{
+	.name = "director flush",
+	.cmd = cmd_director_flush,
+	.usage = "[-a <director socket path>] [-F] [--max-parallel <n>] <host>|all",
+	.parameters = _director_flush_,
 },
 {
 	.name = "director dump",
 	.cmd = cmd_director_dump,
 	.usage = "[-a <director socket path>]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _director_dump_,
 },
 {
 	.name = "director ring add",
 	.cmd = cmd_director_ring_add,
 	.usage = "[-a <director socket path>] <ip> [<port>]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAM('\0', "ip", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('\0', "port", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _director_ring_add_,
 },
 {
 	.name = "director ring remove",
 	.cmd = cmd_director_ring_remove,
 	.usage = "[-a <director socket path>] <ip> [<port>]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAM('\0', "ip", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('\0', "port", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _director_ring_remove_,
 },
 {
 	.name = "director ring status",
 	.cmd = cmd_director_ring_status,
 	.usage = "[-a <director socket path>]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _director_ring_status_,
 }
 };
 

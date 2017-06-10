@@ -234,45 +234,56 @@ static void cmd_process_status(struct doveadm_cmd_context *cctx)
 	i_stream_destroy(&input);
 }
 
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_stop_)
+DOVEADM_CMD_PARAMS_END
 struct doveadm_cmd_ver2 doveadm_cmd_stop_ver2 = {
 	.old_cmd = cmd_stop,
 	.name = "stop",
 	.usage = "",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAMS_END
+	.parameters = _stop_,
 };
 
+DOVEADM_CMD_PARAMS_START(_reload_)
+DOVEADM_CMD_PARAMS_END
 struct doveadm_cmd_ver2 doveadm_cmd_reload_ver2 = {
         .old_cmd = cmd_reload,
         .name = "reload",
         .usage = "",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAMS_END
+	.parameters = _reload_,
 };
 
+DOVEADM_CMD_PARAMS_START(_service_stop_)
+DOVEADM_CMD_PARAM('\0', "service", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
 struct doveadm_cmd_ver2 doveadm_cmd_service_stop_ver2 = {
 	.cmd = cmd_service_stop,
 	.name = "service stop",
 	.usage = "<service> [<service> [...]]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('\0', "service", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _service_stop_,
 };
 
+DOVEADM_CMD_PARAMS_START(_service_status_)
+DOVEADM_CMD_PARAM('\0', "service", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
 struct doveadm_cmd_ver2 doveadm_cmd_service_status_ver2 = {
 	.cmd = cmd_service_status,
 	.name = "service status",
 	.usage = "[<service> [...]]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('\0', "service", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _service_status_,
 };
 
+DOVEADM_CMD_PARAMS_START(_process_status_)
+DOVEADM_CMD_PARAM('\0', "service", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
 struct doveadm_cmd_ver2 doveadm_cmd_process_status_ver2 = {
 	.cmd = cmd_process_status,
 	.name = "process status",
 	.usage = "[<service> [...]]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('\0', "service", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _process_status_,
 };

@@ -10,7 +10,13 @@
 
 #include <stdio.h>
 #include <unistd.h>
+/*
+ * getopt.h is non-POSIX
+ * on AIX getopt() is declared in unistd.h
+ */
+#ifndef _AIX
 #include <getopt.h>
+#endif
 
 static struct doveadm_cmd *doveadm_commands[] = {
 	&doveadm_cmd_mailbox_mutf7,

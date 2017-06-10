@@ -280,14 +280,22 @@ static struct doveadm_mail_cmd_context *cmd_index_alloc(void)
 	return &ctx->ctx;
 }
 
-struct doveadm_cmd_ver2 doveadm_cmd_index_ver2 = {
-	.name = "index",
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-q] [-n <max recent>] <mailbox mask>",
-	.mail_cmd = cmd_index_alloc,
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_index_alloc_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('q',"queue",CMD_PARAM_BOOL,0)
 DOVEADM_CMD_PARAM('n',"max-recent",CMD_PARAM_STR,0)
 DOVEADM_CMD_PARAM('\0',"mailbox-mask",CMD_PARAM_STR,CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+struct doveadm_cmd_ver2 doveadm_cmd_index_ver2 = {
+	.name = "index",
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-q] [-n <max recent>] <mailbox mask>",
+	.mail_cmd = cmd_index_alloc,
+	.parameters = _index_alloc_,
 };

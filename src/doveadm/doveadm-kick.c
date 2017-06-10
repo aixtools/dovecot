@@ -219,13 +219,20 @@ static void cmd_kick(struct doveadm_cmd_context *cctx)
 	pool_unref(&ctx.who.pool);
 }
 
-struct doveadm_cmd_ver2 doveadm_cmd_kick_ver2 = {
-	.name = "kick",
-	.cmd = cmd_kick,
-	.usage = "[-a <anvil socket path>] <user mask>[|]<ip/bits>",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+DOVEADM_CMD_PARAMS_START(_kick_)
 DOVEADM_CMD_PARAM('a',"socket-path",CMD_PARAM_STR,0)
 DOVEADM_CMD_PARAM('f',"force",CMD_PARAM_BOOL,0)
 DOVEADM_CMD_PARAM('\0',"mask",CMD_PARAM_ARRAY,CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+struct doveadm_cmd_ver2 doveadm_cmd_kick_ver2 = {
+	.name = "kick",
+	.cmd = cmd_kick,
+	.usage = "[-a <anvil socket path>] <user mask>[|]<ip/bits>",
+	.parameters = _kick_,
 };

@@ -121,22 +121,32 @@ cmd_quota_recalc_alloc(void)
 	return ctx;
 }
 
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_quota_get_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_quota_recalc_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAMS_END
+
 static struct doveadm_cmd_ver2 quota_commands[] = {
 	{
 		.name = "quota get",
 		.usage = "",
 		.mail_cmd = cmd_quota_get_alloc,
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAMS_END
+		.parameters = _quota_get_,
 	},
 	{
 		.name = "quota recalc",
 		.usage = "",
 		.mail_cmd = cmd_quota_recalc_alloc,
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAMS_END
+		.parameters = _quota_recalc_,
 	}
 };
 

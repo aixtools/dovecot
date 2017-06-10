@@ -331,51 +331,65 @@ static struct doveadm_mail_cmd_context *cmd_mailbox_metadata_list_alloc(void)
 	return &ctx->ctx;
 }
 
-struct doveadm_cmd_ver2 doveadm_cmd_mailbox_metadata_set_ver2 = {
-	.name = "mailbox metadata set",
-	.mail_cmd = cmd_mailbox_metadata_set_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-s] <mailbox> <key> <value>",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_mailbox_metadata_set_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('s', "allow-empty-mailbox-name", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "key", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "value", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_mailbox_metadata_unset_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('s', "allow-empty-mailbox-name", CMD_PARAM_BOOL, 0)
+DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('\0', "key", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_mailbox_metadata_get_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('s', "allow-empty-mailbox-name", CMD_PARAM_BOOL, 0)
+DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('\0', "key", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_mailbox_metadata_list_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('s', "allow-empty-mailbox-name", CMD_PARAM_BOOL, 0)
+DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('\0', "key-prefix", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+struct doveadm_cmd_ver2 doveadm_cmd_mailbox_metadata_set_ver2 = {
+	.name = "mailbox metadata set",
+	.mail_cmd = cmd_mailbox_metadata_set_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-s] <mailbox> <key> <value>",
+	.parameters = _mailbox_metadata_set_,
 };
 
 struct doveadm_cmd_ver2 doveadm_cmd_mailbox_metadata_unset_ver2 = {
 	.name = "mailbox metadata unset",
 	.mail_cmd = cmd_mailbox_metadata_unset_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-s] <mailbox> <key>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('s', "allow-empty-mailbox-name", CMD_PARAM_BOOL, 0)
-DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('\0', "key", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _mailbox_metadata_unset_,
 };
 
 struct doveadm_cmd_ver2 doveadm_cmd_mailbox_metadata_get_ver2 = {
 	.name = "mailbox metadata get",
 	.mail_cmd = cmd_mailbox_metadata_get_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-s] <mailbox> <key>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('s', "allow-empty-mailbox-name", CMD_PARAM_BOOL, 0)
-DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('\0', "key", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _mailbox_metadata_get_,
 };
 
 struct doveadm_cmd_ver2 doveadm_cmd_mailbox_metadata_list_ver2 = {
 	.name = "mailbox metadata list",
 	.mail_cmd = cmd_mailbox_metadata_list_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-s] <mailbox> [<key prefix>]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('s', "allow-empty-mailbox-name", CMD_PARAM_BOOL, 0)
-DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('\0', "key-prefix", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _mailbox_metadata_list_,
 };

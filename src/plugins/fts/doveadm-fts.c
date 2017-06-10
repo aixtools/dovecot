@@ -406,52 +406,68 @@ cmd_fts_rescan_alloc(void)
 	return ctx;
 }
 
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_fts_lookup_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_fts_expand_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_fts_tokenize_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('l', "language", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAM('\0', "text", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_fts_optimize_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('\0', "namespace", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_fts_rescan_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('\0', "namespace", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
 static struct doveadm_cmd_ver2 fts_commands[] = {
 {
 	.name = "fts lookup",
 	.mail_cmd = cmd_fts_lookup_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "<search query>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _fts_lookup_,
 },
 {
 	.name = "fts expand",
 	.mail_cmd = cmd_fts_expand_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "<search query>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _fts_expand_,
 },
 {
 	.name = "fts tokenize",
 	.mail_cmd = cmd_fts_tokenize_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "<text>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('l', "language", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAM('\0', "text", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _fts_tokenize_,
 },
 {
 	.name = "fts optimize",
 	.mail_cmd = cmd_fts_optimize_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "[<namespace>]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('\0', "namespace", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _fts_optimize_,
 },
 {
 	.name = "fts rescan",
 	.mail_cmd = cmd_fts_rescan_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "[<namespace>]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('\0', "namespace", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _fts_rescan_,
 },
 };
 

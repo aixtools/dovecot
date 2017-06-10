@@ -174,24 +174,32 @@ static void cmd_proxy_kick(int argc, char *argv[])
 	ipc_client_deinit(&ctx->ipc);
 }
 
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+DOVEADM_CMD_PARAMS_START(_proxy_list_)
+DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_proxy_kick_)
+DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAM('f', "passdb-field", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAM('\0', "user", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
 struct doveadm_cmd_ver2 doveadm_cmd_proxy[] = {
 {
 	.name = "proxy list",
 	.usage = "[-a <ipc socket path>]",
 	.old_cmd = cmd_proxy_list,
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _proxy_list_,
 },
 {
 	.name = "proxy kick",
 	.usage = "[-a <ipc socket path>] [-f <passdb field>] <user> [...]",
 	.old_cmd = cmd_proxy_kick,
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAM('f', "passdb-field", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAM('\0', "user", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _proxy_kick_,
 }
 };
 

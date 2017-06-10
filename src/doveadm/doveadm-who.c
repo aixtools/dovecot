@@ -349,13 +349,21 @@ static void cmd_who(struct doveadm_cmd_context *cctx)
 	pool_unref(&ctx.pool);
 }
 
-struct doveadm_cmd_ver2 doveadm_cmd_who_ver2 = {
-	.name = "who",
-	.cmd = cmd_who,
-	.usage = "[-a <anvil socket path>] [-1] [<user mask>] [<ip/bits>]",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_who_)
 DOVEADM_CMD_PARAM('a',"socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('1',"separate-connections", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0',"mask", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+struct doveadm_cmd_ver2 doveadm_cmd_who_ver2 = {
+	.name = "who",
+	.cmd = cmd_who,
+	.usage = "[-a <anvil socket path>] [-1] [<user mask>] [<ip/bits>]",
+	.parameters = _who_,
 };

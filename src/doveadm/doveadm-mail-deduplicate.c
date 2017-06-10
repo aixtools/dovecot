@@ -214,13 +214,21 @@ static struct doveadm_mail_cmd_context *cmd_deduplicate_alloc(void)
 	return &ctx->ctx;
 }
 
-struct doveadm_cmd_ver2 doveadm_cmd_deduplicate_ver2 = {
-	.name = "deduplicate",
-	.mail_cmd = cmd_deduplicate_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "[-m] <search query>",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_deduplicate_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('m', "by-msgid", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+struct doveadm_cmd_ver2 doveadm_cmd_deduplicate_ver2 = {
+	.name = "deduplicate",
+	.mail_cmd = cmd_deduplicate_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "[-m] <search query>",
+	.parameters = _deduplicate_,
 };

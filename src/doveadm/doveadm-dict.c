@@ -240,54 +240,39 @@ static void cmd_dict_iter(int argc, char *argv[])
 	dict_deinit(&dict);
 }
 
-static struct doveadm_cmd_ver2 doveadm_cmd_dict[] = {
-{
-	.name = "dict get",
-	.old_cmd = cmd_dict_get,
-	.usage = "[-u <user>] <dict uri> <key>",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_dict_get_)
 DOVEADM_CMD_PARAM('u', "user", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "dict-uri", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "key", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "dict set",
-	.old_cmd = cmd_dict_set,
-	.usage = "[-u <user>] <dict uri> <key> <value>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_dict_set_)
 DOVEADM_CMD_PARAM('u', "user", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "dict-uri", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "key", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "value", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "dict unset",
-	.old_cmd = cmd_dict_unset,
-	.usage = "[-u <user>] <dict uri> <key>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_dict_unset_)
 DOVEADM_CMD_PARAM('u', "user", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "dict-uri", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "key", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "dict inc",
-	.old_cmd = cmd_dict_inc,
-	.usage = "[-u <user>] <dict uri> <key> <diff>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_dict_inc_)
 DOVEADM_CMD_PARAM('u', "user", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "dict-uri", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "key", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "difference", CMD_PARAM_INT64, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "dict iter",
-	.old_cmd = cmd_dict_iter,
-	.usage = "[-u <user>] [-1RV] <dict uri> <prefix>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_dict_iter_)
 DOVEADM_CMD_PARAM('u', "user", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('1', "exact", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('R', "recurse", CMD_PARAM_BOOL, 0)
@@ -295,6 +280,37 @@ DOVEADM_CMD_PARAM('V', "no-value", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0', "dict-uri", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "prefix", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+static struct doveadm_cmd_ver2 doveadm_cmd_dict[] = {
+{
+	.name = "dict get",
+	.old_cmd = cmd_dict_get,
+	.usage = "[-u <user>] <dict uri> <key>",
+	.parameters = _dict_get_,
+},
+{
+	.name = "dict set",
+	.old_cmd = cmd_dict_set,
+	.usage = "[-u <user>] <dict uri> <key> <value>",
+	.parameters = _dict_set_,
+},
+{
+	.name = "dict unset",
+	.old_cmd = cmd_dict_unset,
+	.usage = "[-u <user>] <dict uri> <key>",
+	.parameters = _dict_unset_,
+},
+{
+	.name = "dict inc",
+	.old_cmd = cmd_dict_inc,
+	.usage = "[-u <user>] <dict uri> <key> <diff>",
+	.parameters = _dict_inc_,
+},
+{
+	.name = "dict iter",
+	.old_cmd = cmd_dict_iter,
+	.usage = "[-u <user>] [-1RV] <dict uri> <prefix>",
+	.parameters = _dict_iter_,
 }
 };
 

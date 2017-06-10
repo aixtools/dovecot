@@ -474,23 +474,18 @@ static void cmd_user_ver2(struct doveadm_cmd_context *cctx)
 		auth_master_deinit(&conn);
 }
 
-static
-struct doveadm_cmd_ver2 doveadm_cmd_auth_server[] = {
-{
-	.name = "auth cache flush",
-	.old_cmd = cmd_auth_cache_flush,
-	.usage = "[-a <master socket path>] [<user> [...]]",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_auth_cache_flush_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "user", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "user",
-	.cmd = cmd_user_ver2,
-	.usage = "[-a <userdb socket path>] [-x <auth info>] [-f field] [-e <value>] [-u] <user mask> [...]",
-	.flags = CMD_FLAG_NO_PRINT,
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_user_)
 DOVEADM_CMD_PARAM('a', "socket-path", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('x', "auth-info", CMD_PARAM_ARRAY, 0)
 DOVEADM_CMD_PARAM('f', "field", CMD_PARAM_STR, 0)
@@ -498,6 +493,21 @@ DOVEADM_CMD_PARAM('e', "expand-field", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('u', "userdb-only", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0', "user-mask", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+static
+struct doveadm_cmd_ver2 doveadm_cmd_auth_server[] = {
+{
+	.name = "auth cache flush",
+	.old_cmd = cmd_auth_cache_flush,
+	.usage = "[-a <master socket path>] [<user> [...]]",
+	.parameters = _auth_cache_flush_,
+},
+{
+	.name = "user",
+	.cmd = cmd_user_ver2,
+	.usage = "[-a <userdb socket path>] [-x <auth info>] [-f field] [-e <value>] [-u] <user mask> [...]",
+	.flags = CMD_FLAG_NO_PRINT,
+	.parameters = _user_,
 }
 };
 

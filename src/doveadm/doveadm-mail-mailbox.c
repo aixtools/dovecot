@@ -768,36 +768,28 @@ static struct doveadm_mail_cmd_context *cmd_mailbox_path_alloc(void)
 	return &ctx->ctx.ctx;
 }
 
-struct doveadm_cmd_ver2 doveadm_cmd_mailbox_list_ver2 = {
-	.name = "mailbox list",
-	.mail_cmd = cmd_mailbox_list_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-7|-8] [-s] [<mailbox mask> [...]]",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_mailbox_list_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('7', "mutf7", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('8', "utf8", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('s', "subscriptions", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0', "mailbox-mask", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-};
 
-struct doveadm_cmd_ver2 doveadm_cmd_mailbox_create_ver2 = {
-	.name = "mailbox create",
-	.mail_cmd = cmd_mailbox_create_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-s] [-g <guid>] <mailbox> [...]",
-DOVEADM_CMD_PARAMS_START
+DOVEADM_CMD_PARAMS_START(_mailbox_create_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('s', "subscriptions", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('g', "guid", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-};
 
-struct doveadm_cmd_ver2 doveadm_cmd_mailbox_delete_ver2 = {
-	.name = "mailbox delete",
-	.mail_cmd = cmd_mailbox_delete_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-e] [-r] [-s] [-Z] <mailbox> [...]",
-DOVEADM_CMD_PARAMS_START
+DOVEADM_CMD_PARAMS_START(_mailbox_delete_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('e', "require-empty", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('s', "subscriptions", CMD_PARAM_BOOL, 0)
@@ -805,45 +797,25 @@ DOVEADM_CMD_PARAM('r', "recursive", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('Z', "unsafe", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-};
 
-struct doveadm_cmd_ver2 doveadm_cmd_mailbox_rename_ver2 = {
-	.name = "mailbox rename",
-	.mail_cmd = cmd_mailbox_rename_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-s] <old name> <new name>",
-DOVEADM_CMD_PARAMS_START
+DOVEADM_CMD_PARAMS_START(_mailbox_rename_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('s', "subscriptions", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "new-name", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-};
 
-struct doveadm_cmd_ver2 doveadm_cmd_mailbox_subscribe_ver2 = {
-	.name = "mailbox subscribe",
-	.mail_cmd = cmd_mailbox_subscribe_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"<mailbox> [...]",
-DOVEADM_CMD_PARAMS_START
+DOVEADM_CMD_PARAMS_START(_mailbox_subscribe_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-};
 
-struct doveadm_cmd_ver2 doveadm_cmd_mailbox_unsubscribe_ver2 = {
-	.name = "mailbox unsubscribe",
-	.mail_cmd = cmd_mailbox_unsubscribe_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"<mailbox> [...]",
-DOVEADM_CMD_PARAMS_START
+DOVEADM_CMD_PARAMS_START(_mailbox_unsubscribe_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-};
 
-struct doveadm_cmd_ver2 doveadm_cmd_mailbox_update_ver2 = {
-	.name = "mailbox update",
-	.mail_cmd = cmd_mailbox_update_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[--mailbox-guid guid] [--uid-validity uid] [--min-next-uid uid] [--min-first-recent-uid uid] [--min-highest-modseq seq] [--min-highest-pvt-modseq seq] <mailbox>",
-DOVEADM_CMD_PARAMS_START
+DOVEADM_CMD_PARAMS_START(_mailbox_update_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('g', "mailbox-guid", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('V', "uid-validity", CMD_PARAM_STR, 0)
@@ -853,16 +825,66 @@ DOVEADM_CMD_PARAM('H', "min-highest-modseq", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('P', "min-highest-pvt-modseq", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_mailbox_path_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('t', "type", CMD_PARAM_STR, 0)
+DOVEADM_CMD_PARAMS_END
+
+struct doveadm_cmd_ver2 doveadm_cmd_mailbox_list_ver2 = {
+	.name = "mailbox list",
+	.mail_cmd = cmd_mailbox_list_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-7|-8] [-s] [<mailbox mask> [...]]",
+	.parameters = _mailbox_list_,
+};
+
+struct doveadm_cmd_ver2 doveadm_cmd_mailbox_create_ver2 = {
+	.name = "mailbox create",
+	.mail_cmd = cmd_mailbox_create_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-s] [-g <guid>] <mailbox> [...]",
+	.parameters = _mailbox_create_,
+};
+
+struct doveadm_cmd_ver2 doveadm_cmd_mailbox_delete_ver2 = {
+	.name = "mailbox delete",
+	.mail_cmd = cmd_mailbox_delete_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-e] [-r] [-s] [-Z] <mailbox> [...]",
+	.parameters = _mailbox_delete_,
+};
+
+struct doveadm_cmd_ver2 doveadm_cmd_mailbox_rename_ver2 = {
+	.name = "mailbox rename",
+	.mail_cmd = cmd_mailbox_rename_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-s] <old name> <new name>",
+	.parameters = _mailbox_rename_,
+};
+
+struct doveadm_cmd_ver2 doveadm_cmd_mailbox_subscribe_ver2 = {
+	.name = "mailbox subscribe",
+	.mail_cmd = cmd_mailbox_subscribe_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"<mailbox> [...]",
+	.parameters = _mailbox_subscribe_,
+};
+
+struct doveadm_cmd_ver2 doveadm_cmd_mailbox_unsubscribe_ver2 = {
+	.name = "mailbox unsubscribe",
+	.mail_cmd = cmd_mailbox_unsubscribe_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"<mailbox> [...]",
+	.parameters = _mailbox_unsubscribe_,
+};
+
+struct doveadm_cmd_ver2 doveadm_cmd_mailbox_update_ver2 = {
+	.name = "mailbox update",
+	.mail_cmd = cmd_mailbox_update_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[--mailbox-guid guid] [--uid-validity uid] [--min-next-uid uid] [--min-first-recent-uid uid] [--min-highest-modseq seq] [--min-highest-pvt-modseq seq] <mailbox>",
+	.parameters = _mailbox_update_,
 };
 
 struct doveadm_cmd_ver2 doveadm_cmd_mailbox_path_ver2 = {
 	.name = "mailbox path",
 	.mail_cmd = cmd_mailbox_path_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX"[-t <type>] <mailbox>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('\0', "mailbox", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('t', "type", CMD_PARAM_STR, 0)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _mailbox_path_,
 };
 

@@ -141,38 +141,50 @@ static struct doveadm_mail_cmd_context *cmd_flags_replace_alloc(void)
 	return cmd_flag_alloc(MODIFY_REPLACE);
 }
 
-struct doveadm_cmd_ver2 doveadm_cmd_flags_add_ver2 = {
-	.name = "flags add",
-	.mail_cmd = cmd_flags_add_alloc,
-	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "<flags> <search query>",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_flags_add_)
 DOVEADM_CMD_MAIL_COMMON
 DOVEADM_CMD_PARAM('\0', "flag", CMD_PARAM_ARRAY, 0)
 DOVEADM_CMD_PARAM('\0', "flagstr", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL|CMD_PARAM_FLAG_DO_NOT_EXPOSE)
 DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_flags_remove_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('\0', "flag", CMD_PARAM_ARRAY, 0)
+DOVEADM_CMD_PARAM('\0', "flagstr", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL|CMD_PARAM_FLAG_DO_NOT_EXPOSE)
+DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_flags_replace_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('\0', "flag", CMD_PARAM_ARRAY, 0)
+DOVEADM_CMD_PARAM('\0', "flagstr", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL|CMD_PARAM_FLAG_DO_NOT_EXPOSE)
+DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+struct doveadm_cmd_ver2 doveadm_cmd_flags_add_ver2 = {
+	.name = "flags add",
+	.mail_cmd = cmd_flags_add_alloc,
+	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "<flags> <search query>",
+	.parameters = _flags_add_,
 };
 
 struct doveadm_cmd_ver2 doveadm_cmd_flags_remove_ver2 = {
 	.name = "flags remove",
 	.mail_cmd = cmd_flags_remove_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "<flags> <search query>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('\0', "flag", CMD_PARAM_ARRAY, 0)
-DOVEADM_CMD_PARAM('\0', "flagstr", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL|CMD_PARAM_FLAG_DO_NOT_EXPOSE)
-DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _flags_remove_,
 };
 
 struct doveadm_cmd_ver2 doveadm_cmd_flags_replace_ver2 = {
 	.name = "flags replace",
 	.mail_cmd = cmd_flags_replace_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "<flags> <search query>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('\0', "flag", CMD_PARAM_ARRAY, 0)
-DOVEADM_CMD_PARAM('\0', "flagstr", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL|CMD_PARAM_FLAG_DO_NOT_EXPOSE)
-DOVEADM_CMD_PARAM('\0', "query", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _flags_replace_,
 };

@@ -505,91 +505,113 @@ static void cmd_fs_iter_dirs(int argc, char *argv[])
 	cmd_fs_iter_full(argc, argv, FS_ITER_FLAG_DIRS, cmd_fs_iter_dirs);
 }
 
-struct doveadm_cmd_ver2 doveadm_cmd_fs[] = {
-{
-	.name = "fs get",
-	.old_cmd = cmd_fs_get,
-	.usage = "<fs-driver> <fs-args> <path>",
-DOVEADM_CMD_PARAMS_START
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_fs_get_)
 DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "fs put",
-	.old_cmd = cmd_fs_put,
-	.usage = "[-h <hash>] <fs-driver> <fs-args> <input path> <path>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_fs_put_)
 DOVEADM_CMD_PARAM('h', "hash", CMD_PARAM_STR, 0)
 DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "input-path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "fs copy",
-	.old_cmd = cmd_fs_copy,
-	.usage = "<fs-driver> <fs-args> <source path> <dest path>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_fs_copy_)
 DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "source-path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "destination-path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "fs stat",
-	.old_cmd = cmd_fs_stat,
-	.usage = "<fs-driver> <fs-args> <path>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_fs_stat_)
 DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "fs metadata",
-	.old_cmd = cmd_fs_metadata,
-	.usage = "<fs-driver> <fs-args> <path>",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_fs_metadata_)
 DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
-},
-{
-	.name = "fs delete",
-	.old_cmd = cmd_fs_delete,
-	.usage = "[-R] [-n <count>] <fs-driver> <fs-args> <path> [<path> ...]",
-DOVEADM_CMD_PARAMS_START
+
+DOVEADM_CMD_PARAMS_START(_fs_delete_)
 DOVEADM_CMD_PARAM('R', "recursive", CMD_PARAM_BOOL, 0)
 DOVEADM_CMD_PARAM('n', "max-parallel", CMD_PARAM_INT64, 0)
 DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAM('\0', "path", CMD_PARAM_ARRAY, CMD_PARAM_FLAG_POSITIONAL)
 DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_fs_iter_)
+DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('\0', "path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_fs_iter_dirs_)
+DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAM('\0', "path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+struct doveadm_cmd_ver2 doveadm_cmd_fs[] = {
+{
+	.name = "fs get",
+	.old_cmd = cmd_fs_get,
+	.usage = "<fs-driver> <fs-args> <path>",
+	.parameters = _fs_get_,
+},
+{
+	.name = "fs put",
+	.old_cmd = cmd_fs_put,
+	.usage = "[-h <hash>] <fs-driver> <fs-args> <input path> <path>",
+	.parameters = _fs_put_,
+},
+{
+	.name = "fs copy",
+	.old_cmd = cmd_fs_copy,
+	.usage = "<fs-driver> <fs-args> <source path> <dest path>",
+	.parameters = _fs_copy_,
+},
+{
+	.name = "fs stat",
+	.old_cmd = cmd_fs_stat,
+	.usage = "<fs-driver> <fs-args> <path>",
+	.parameters = _fs_stat_,
+},
+{
+	.name = "fs metadata",
+	.old_cmd = cmd_fs_metadata,
+	.usage = "<fs-driver> <fs-args> <path>",
+	.parameters = _fs_metadata_,
+},
+{
+	.name = "fs delete",
+	.old_cmd = cmd_fs_delete,
+	.usage = "[-R] [-n <count>] <fs-driver> <fs-args> <path> [<path> ...]",
+	.parameters = _fs_delete_,
 },
 {
 	.name = "fs iter",
 	.old_cmd = cmd_fs_iter,
 	.usage = "<fs-driver> <fs-args> <path>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('\0', "path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _fs_iter_,
 },
 {
 	.name = "fs iter-dirs",
 	.old_cmd = cmd_fs_iter_dirs,
 	.usage = "<fs-driver> <fs-args> <path>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('\0', "fs-driver", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('\0', "fs-args", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAM('\0', "path", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _fs_iter_dirs_,
 }
 };
 

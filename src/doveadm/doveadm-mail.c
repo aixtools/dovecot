@@ -849,23 +849,33 @@ void doveadm_mail_help_name(const char *cmd_name)
 	i_fatal("Missing help for command %s", cmd_name);
 }
 
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_force_resync_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAM('\0', "mailbox-mask", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
+
+DOVEADM_CMD_PARAMS_START(_purge_)
+DOVEADM_CMD_MAIL_COMMON
+DOVEADM_CMD_PARAMS_END
+
 static struct doveadm_cmd_ver2 doveadm_cmd_force_resync_ver2 = {
 	.name = "force-resync",
 	.mail_cmd = cmd_force_resync_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX "<mailbox mask>",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAM('\0', "mailbox-mask", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _force_resync_,
 };
 
 static struct doveadm_cmd_ver2 doveadm_cmd_purge_ver2 = {
 	.name = "purge",
 	.mail_cmd = cmd_purge_alloc,
 	.usage = DOVEADM_CMD_MAIL_USAGE_PREFIX,
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_MAIL_COMMON
-DOVEADM_CMD_PARAMS_END
+	.parameters = _purge_,
 };
 
 

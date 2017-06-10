@@ -115,12 +115,19 @@ static void cmd_penalty(struct doveadm_cmd_context *cctx)
 	penalty_lookup(&ctx);
 }
 
+/*
+ * declare the .parameters seperate from dove_cmd_ver2 structure
+ * because IBM xlc does not support nested "dynamic" declaration
+ * of Compound Literal's. Snif!
+ */
+
+DOVEADM_CMD_PARAMS_START(_penalty_)
+DOVEADM_CMD_PARAM('a',"socket-path", CMD_PARAM_STR,0)
+DOVEADM_CMD_PARAM('\0',"netmask", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
+DOVEADM_CMD_PARAMS_END
 struct doveadm_cmd_ver2 doveadm_cmd_penalty_ver2 = {
 	.name = "penalty",
 	.cmd = cmd_penalty,
 	.usage = "[-a <anvil socket path>] [<ip/bits>]",
-DOVEADM_CMD_PARAMS_START
-DOVEADM_CMD_PARAM('a',"socket-path", CMD_PARAM_STR,0)
-DOVEADM_CMD_PARAM('\0',"netmask", CMD_PARAM_STR, CMD_PARAM_FLAG_POSITIONAL)
-DOVEADM_CMD_PARAMS_END
+	.parameters = _penalty_,
 };
