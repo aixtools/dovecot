@@ -12,12 +12,15 @@ for dir in $GETTEXT_DIR /usr/share/gettext /usr/local/share/gettext; do
     /bin/cp -f $dir/config.rpath .
     break
   fi
+  echo "Failed to find config.rpath"
+  echo "try setting the env variable GETTEXT_DIR"
+  exit
 done
 
 if test ! -f doc/wiki/Authentication.txt; then
   cd doc
   wget https://www.dovecot.org/tmp/wiki2-export.tar.gz
-  tar xzf wiki2-export.tar.gz
+  gzip -dc wiki2-export.tar.gz | tar xf -
   if [ $? != 0 ]; then
     echo "Failed to uncompress wiki docs"
     exit
